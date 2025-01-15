@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import isEmail from "validator/lib/isEmail.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import AutoIncrementFactory from "mongoose-sequence";
 
 const AutoIncrement = AutoIncrementFactory(mongoose);
