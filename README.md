@@ -14,14 +14,14 @@ Start by forking this repository to your GitHub account. Then clone your forked 
 
 Once you have forked the repository, navigate to the project folder and run the following command to install the required dependencies:
 
-```bash
+
 npm install
 
 ** ### 3. Start the server **
 
 After installing the dependencies, run the following command to start the application:
 
-```bash
+
 nodemon app.js
 
 📋 Features
