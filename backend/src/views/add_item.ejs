@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Form Example</title>
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    input[type="submit"] {
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .response-area {
+      margin-top: 20px;
+      background-color: #f0f0f0;
+      padding: 20px 5px;
+    }
+
+    #get {
+      background-color: #2ecc71;
+    }
+
+    #get:hover {
+      background-color: #27ae60;
+    }
+
+    #post {
+      background-color: #3498db;
+    }
+
+    #post:hover {
+      background-color: #2980b9;
+    }
+
+    #put {
+      background-color: #9b59b6;
+    }
+
+    #put:hover {
+      background-color: #8e44ad;
+    }
+
+    #delete {
+      background-color: #e74c3c;
+    }
+
+    #delete:hover {
+      background-color: #c0392b;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <form id="myForm">
+      <label for="Dish_Name">Dish-Name:</label>
+      <input type="text" id="Dish_Name" name="name">
+      
+      <label for="Dish_Type">Type:</label>
+      <select id="Dish_Type" name="category">
+        <option value="">Select</option>
+        <option value="Appetizers">Appetizers</option>
+        <option value="Main Course">Main Course</option>
+        <option value="Desserts">Desserts</option>
+      </select>
+      
+
+      <label for="Price">Price:</label>
+      <input type="number" id="Price" name="price">
+      
+
+      <label for="availability">Available:</label>
+      <input type="radio" id="availableTrue" name="availability" value="true">
+      <label for="availableTrue">True</label>
+      <input type="radio" id="availableFalse" name="availability" value="false">
+      <label for="availableFalse">False</label>
+
+      <label for="menuId">Item ID (For Update/Delete):</label>
+      <input type="number" id="menuId" name="serialNumber">
+      
+      <label for="submit">Route:</label>
+      <input id="get" type="submit" value="GET">
+      <input id="post" type="submit" value="POST">
+      <input id="put" type="submit" value="PUT">
+      <input id="delete" type="submit" value="DELETE">
+
+      <h4>Menus:</h4>
+    <div id="menus">
+      <!-- Menu items will be inserted here -->
+    </div>
+
+    <!-- Errors Section -->
+    <h4>Errors:</h4>
+    <div id="errors">
+      <!-- Error messages will be inserted here -->
+    </div>
+
+    </form>
+    
+  </div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('myForm');
+    const responseArea = document.getElementById('response');
+
+    const handleRequest = async (method, route) => {
+      const formData = new FormData(form);
+      let body = {};
+
+      // Collect form data
+      body["serialNumber"]="0";
+      formData.forEach((value, key) => {
+        if (value) {
+          body[key] = value;
+        }
+      });
+      console.log(body);
+      // Handle routes for PUT and DELETE
+      if (method === 'PUT' || method === 'DELETE') {
+        const id = body.serialNumber; 
+        delete body.serialNumber;
+        route = `${route}/${id}`;
+      }
+
+      try {
+        const options = {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+        };
+
+        // Attach body only if method is not GET
+        if (method !== 'GET') {
+          options.body = JSON.stringify(body);
+        }
+
+        // Send fetch request
+        const response = await fetch(route, options);
+        const data = await response.json();
+
+        console.log(data.menus);
+        console.log(data.errors);
+
+        if (!response.ok) {
+          // Handle errors sent by the backend
+          console.error("Error:", data);
+          return;
+          }
+
+          document.getElementById('menus').innerHTML = '';
+          document.getElementById('errors').innerHTML = '';
+
+          // Handle menus data
+          if (data.menus && data.menus.length > 0) {
+            const menuList = document.createElement('ul');
+            data.menus.forEach(menu => {
+              const menuItem = document.createElement('li');
+              menuItem.textContent = `${menu.name} - ${menu.category} - $${menu.price}- ${menu.availability}- ${menu.serialNumber}`;
+              menuList.appendChild(menuItem);
+            });
+            document.getElementById('menus').appendChild(menuList);
+          } else {
+            document.getElementById('menus').innerHTML = '<p>No menus available.</p>';
+          }
+
+          // Handle errors data
+          if (data.errors && Object.keys(data.errors).length > 0) {
+          Object.keys(data.errors).forEach(field => {
+            const errorMessage = data.errors[field];
+            
+            // Check if an error message exists for this field
+            if (errorMessage) {
+              // Create a new error div
+              const errorElement = document.createElement('div');
+              errorElement.style.color = 'red';
+              errorElement.textContent = errorMessage;
+
+              // Find the input field associated with the error
+              const fieldElement = document.querySelector(`#${field}`);
+              if (fieldElement) {
+                // Insert the error message directly after the input field
+                fieldElement.insertAdjacentElement('afterend', errorElement);
+              }
+            }
+          });
+
+        }
+      } catch (error) {
+        console.error("Network Error:", error);
+        alert("Failed to connect to the server. Please try again later.");
+      }
+    };
+
+    // Attach event listeners for each button
+    document.getElementById('get').addEventListener('click', (e) => {
+      e.preventDefault();
+      handleRequest('GET', '/menu');
+    });
+
+    document.getElementById('post').addEventListener('click', (e) => {
+      e.preventDefault();
+      handleRequest('POST', '/menu');
+    });
+
+    document.getElementById('put').addEventListener('click', (e) => {
+      e.preventDefault();
+      handleRequest('PUT', '/menu');
+    });
+
+    document.getElementById('delete').addEventListener('click', (e) => {
+      e.preventDefault();
+      handleRequest('DELETE', '/menu');
+    });
+  });
+</script>
+
+</body>
+
+</html>

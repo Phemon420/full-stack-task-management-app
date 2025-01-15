@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Orders</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <div class="container">
+    <h1>My Orders</h1>
+
+    <% if (orders && orders.length > 0) { %>
+      <div class="orders-list">
+        <% orders.forEach(order => { %>
+          <div class="order">
+            <h2>Order ID: <%= order._id %></h2>
+            <p><strong>Status:</strong> <%= order.status %></p>
+            <p><strong>Created At:</strong> <%= new Date(order.createdAt).toLocaleString() %></p>
+
+            <h3>Order Items:</h3>
+            <ul class="order-items">
+              <% order.items.forEach(item => { %>
+                <li>
+                  <strong><%= item.menuItemId.name %></strong>
+                  - Quantity: <%= item.quantity %>
+                  - Price: $<%= item.menuItemId.price %> each
+                  <br>
+                  <strong>Total: $<%= item.quantity * item.menuItemId.price %></strong>
+                </li>
+              <% }) %>
+            </ul>
+
+            <p><strong>Total Amount: $<%= order.totalAmount %></strong></p>
+          </div>
+          <hr>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <p>You have no orders yet.</p>
+    <% } %>
+  </div>
+
+</body>
+</html>
