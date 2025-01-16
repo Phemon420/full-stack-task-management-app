@@ -4,20 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <style>
+        /* Reset and general styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: #4a90e2;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #357abd;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-options {
+            margin-top: 20px;
+        }
+
+        .admin-options a {
+            color: #e91e63;
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            .container {
+                padding: 15px 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <% if(user){ %>
-    <h1>Welcome, <%= user ? user.username : 'Guest' %></h1>
-    <h1><a href="/logout">LogOut</a></h1>
-        <%if(user.role=='admin'){%>
-            <h1><a href="/add_item">add-items</a></h1>
-        <%}%>
-    <%} else{%>
-    <h1><a href="/">Home</a></h1>
-    <h1><a href="/login">Login</a></h1>
-    <h1><a href="/signup">Signup</a></h1>
-    <% } %>
-    <h1><a href="/secret">Secret</a></h1>
-
+    <div class="container">
+        <% if(user){ %>
+            <h1>Welcome, <%= user ? user.username : 'Guest' %></h1>
+            <h1><a href="/logout">LogOut</a></h1>
+            <% if(user.role == 'admin'){ %>
+                <div class="admin-options">
+                    <h1><a href="/add_item">Add Items</a></h1>
+                </div>
+            <% } %>
+        <% } else { %>
+            <h1><a href="/">Home</a></h1>
+            <h1><a href="/login">Login</a></h1>
+            <h1><a href="/signup">Sign Up</a></h1>
+        <% } %>
+        <h1><a href="/secret">Place Order</a></h1>
+    </div>
 </body>
 </html>
