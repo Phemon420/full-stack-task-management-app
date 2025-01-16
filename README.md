@@ -15,36 +15,40 @@ Start by forking this repository to your GitHub account. Then clone your forked 
 Once you have forked the repository, navigate to the project folder and run the following command to install the required dependencies:
 
 
-npm install
+``` npm install ```
 
-** ### 3. Start the server **
+### 3. Start the server
 
 After installing the dependencies, run the following command to start the application:
 
 
-nodemon app.js
+``` nodemon app.js ```
 
-📋 Features
-1. User Authentication
+# 📋Features
+## 1.User Authentication
 Login & Sign Up Pages: Users can create accounts or log in to access the application.
 Role-based Privileges:
 Normal User: A regular user can view and manage their tasks.
 Admin: An admin can manage all users, tasks, and data in the application.
-2. JWT Authentication
+## 2. JWT Authentication
 JSON Web Tokens (JWT) are used to authenticate users. After successful login, a JWT token is generated and used to protect routes.
 Protected Routes: Only authenticated users can access certain routes. Admin routes are protected by an additional authorization layer.
-3. Database Integration
+## 3. Database Integration
 The application uses MongoDB as the database to store user data, tasks, and other application data.
 MongoDB is used to fetch and store all the necessary items (such as tasks or any other user-related data).
 
-🛠️ Tech Stack
+# 🛠️ Tech Stack
 Backend: Node.js, Express
+
 Database: MongoDB
+
 Authentication: JWT (JSON Web Tokens)
+
 Development Tools: Nodemon for automatic server restarts
+
 Other Libraries: bcryptjs (for password hashing)
 
-⚠️ Troubleshooting
+# ⚠️ Troubleshooting
 If you encounter any issues with bcrypt or any native modules, consider using bcryptjs as a fallback.
 Ensure you have a .env file with the required environment variables, including your MongoDB URI and JWT secret
 
